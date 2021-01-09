@@ -41,7 +41,7 @@ const connectDB = async () => {
 
 
 function analyzeContents(body, bot) {
-    
+
 
 }
 
@@ -67,20 +67,52 @@ for (bot of bots) {
 // endpoints 
 
 app.get('/getAll', (req, res) => {
+    let bots = await Bot.find();
+    res.send(bots);
+});
 
-})
 
+//
 app.post('/postBot', (req, res) => {
-    
-})
+    let bot = new Bot({
+        fakeNews: req.body.fakeNews,
+        hateSpeech: req.body.hateSpeech,
+        subreddit: req.body.subreddit,
+        name: req.body.name
+    });
+
+    try {
+        await bot.save();
+        res.status(200);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
 
 app.put('/editBot', (req, res) => {
-    
-})
+    try {
+        let bot = await Bot.findOne({name: req.body.name});
+        for (attr in req.body.newAttributes) {
+            bot[attr] = req.body.newAttributes[attr];
+        }
+        await bot.save();
+        res.status(200).send(bot);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }    
+});
 
 app.delete('/deleteBot', (req, res) => {
-    
-})
+    try {
+        await Bot.deleteOne({name: req.body.name});
+        res.status(200).send(`${req.body.name} deleted`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
 
 
 

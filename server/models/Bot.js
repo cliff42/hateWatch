@@ -6,7 +6,10 @@ const BotSchema = mongoose.Schema({
     fakeNews: Boolean,
     hateSpeech: Boolean,
     subreddit: String,
-    name: String,
+    name: {
+        type: String,
+        unique: true,
+    },
     dateCreated: {
         type: Date,
         default: Date.now,
