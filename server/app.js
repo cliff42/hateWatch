@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const snoowrap = require('snoowrap');
+const language = require('@google-cloud/language');
 const testURI = process.env.mongoURI;
 const Bot = require('./models/Bot');
 
@@ -11,6 +12,8 @@ const config = {
 	password: process.env.password,
 	user_agent: 'nwHacksModBot'
 };
+
+reddit = new snoowrap(config);
 
 const app = express();
 
@@ -36,19 +39,27 @@ const connectDB = async () => {
     }
   };
 
-subreddits = [];
-bots = Bot.find().then((doc) => {
+
+function analyzeContents(body, bot) {
+    
+
+}
+
+const client = new language.LanguageServiceClient();
+let subreddits = [];
+let bots = Bot.find().then((doc) => {
     doc.forEach((bot) => {
         subreddits.push(bot.subreddit);
     })
 });
 
-
-
 // main
 
-for (subreddit of subreddits) {
-    
+for (bot of bots) {
+    let comments = await reddit.getSubreddit(bot.subreddit).getNewComments({limit: 100});
+    for (comment of comments) {
+        analyzeContents(comment.body, bot);
+    }
 }
 
 
