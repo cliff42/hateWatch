@@ -39,7 +39,7 @@ import axios from 'axios';
 export default {
   name: 'Bots',
   setup() {
-    const bots = ref([{name:"bot1", subreddit:"sub1", hateSpeech:"true"}]);
+    const bots = ref([]);
     const modalInfo= ref([]);
     const modalSub = ref('');
     const modalName = ref('');
@@ -62,6 +62,7 @@ export default {
         key: 'actions',
         label: 'Actions',
         sortable: false,
+        thClass: 'actions-col',
         tdClass: 'actions-col'
       }
     ];
@@ -69,6 +70,7 @@ export default {
     async function getBots() {
       const response = await axios.get('http://localhost:4000/getAll');
 
+      bots.value = [];
       response.data.forEach(bot => {
         bots.value.push({
           name: bot.name,
@@ -77,6 +79,17 @@ export default {
           hateSpeech: bot.hateSpeech
         });
       });
+
+      if (bots.value.length === 0) {
+        bots.value = [
+          {
+            name: 'No bots found',
+            subreddit: 'N/A',
+            fakeNews: true,
+            hateSpeech: false
+          }
+        ];
+      }
     }
 
     function deleteBot(botName) {
@@ -131,6 +144,10 @@ export default {
 </script>
 
 <style>
+.bots h2 {
+  font-weight: bold;
+}
+
 .bots {
   display: flex;
   flex-direction: column;

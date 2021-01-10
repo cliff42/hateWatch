@@ -3,7 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const snoowrap = require('snoowrap');
-const language = require('@google-cloud/language');
 const testURI = process.env.MONGOURI;
 const Bot = require('./models/Bot');
 const Comment = require('./models/Comment');
@@ -116,7 +115,7 @@ new Comment({
 
 */
 
-// TODO: this is probably wrong so you may want to fix it
+
     let isHateSpeech = false;
     let certainty = 0;
 
@@ -125,7 +124,7 @@ new Comment({
             name: modelFullId,
             payload: {
                 textSnippet: {
-                    content: comment.body, // TODO: assuming body is the comment/ string want to analyize
+                    content: comment.body, 
                     mimeType: 'text/plain', // Types: 'test/plain', 'text/html'
                 },
             },
@@ -136,8 +135,6 @@ new Comment({
         console.log(err)
     }
 
-    // only saves if the comment is hatespeech
-    //TODO: not sure how to fill in the other data sections here so i just put '' for now
     if(certainty >= 0.5) {
         isHateSpeech = true;
     }
@@ -148,13 +145,14 @@ new Comment({
         isHateSpeech: isHateSpeech,
         certainty: certainty,
         subreddit: comment.subreddit.display_name,
+        datePosted: new Date(comment.created_utc * 1000),
     }).save().catch(err => {
         console.error(err);
     });
 }
 
 
-const client = new language.LanguageServiceClient();
+
 
 
 
