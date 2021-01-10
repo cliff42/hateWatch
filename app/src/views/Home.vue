@@ -21,6 +21,7 @@
       <label class="submit">
         <b-button variant="outline-primary" @click="onSubmit">Deploy</b-button>
       </label>
+      <h5>{{message}}</h5>
     </b-form>
   </div>
 </template>
@@ -36,12 +37,9 @@ export default {
     const subreddit = ref('');
     const optionSpeech = ref('');
     const optionNews = ref('');
+    const message = ref('');
 
     async function onSubmit() {
-      console.log('test');
-      console.log(optionNews.value);
-      console.log(optionSpeech.value);
-      // post to be
 
       var formData = {
         "name": name,
@@ -51,10 +49,11 @@ export default {
       }
 
       try {
-        console.log(formData.value);
-        await axios.post('http://localhost:4000/postBot', formData);
+        await axios.post('http://localhost:4000/postBot', formData.value);
+        message.value = 'Bot Created!';
       } catch (err) {
         console.log(err);
+        message.value = err;
       }
     };
 
@@ -64,6 +63,7 @@ export default {
       optionSpeech,
       optionNews,
       onSubmit,
+      message,
     };
   }
 }
