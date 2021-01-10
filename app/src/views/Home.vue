@@ -35,21 +35,23 @@ export default {
   setup() {
     const name = ref('');
     const subreddit = ref('');
-    const optionSpeech = ref('');
-    const optionNews = ref('');
+    const optionSpeech = ref(false);
+    const optionNews = ref(false);
     const message = ref('');
 
     async function onSubmit() {
 
       var formData = {
-        "name": name,
-        "subreddit": subreddit,
-        "optionSpeech": optionSpeech,
-        "optionNews": optionNews,
+        "name": name.value,
+        "subreddit": subreddit.value,
+        "hateSpeech": optionSpeech.value,
+        "fakeNews": optionNews.value,
       }
 
+      console.log(formData);
+
       try {
-        await axios.post('http://localhost:4000/postBot', formData.value);
+        await axios.post('http://localhost:4000/postBot', formData);
         message.value = 'Bot Created!';
       } catch (err) {
         console.log(err);

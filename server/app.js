@@ -201,7 +201,7 @@ async function main() {
     setInterval(runBots, 5000);
 };
 
-main();
+// main();
 
 
 
@@ -222,11 +222,12 @@ app.get('/getAll', async (req, res) => {
     "subreddit": "test"}
 */
 app.post('/postBot', async (req, res) => {
+    console.log('REQ HERERERERERERE:' + req);
     let bot = new Bot({
         fakeNews: req.body.fakeNews,
         hateSpeech: req.body.hateSpeech,
         subreddit: req.body.subreddit,
-        name: req.body.name
+        name: req.body.name,
     });
     console.log(bot);
     try {
