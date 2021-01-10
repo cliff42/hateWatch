@@ -65,7 +65,7 @@ export default {
           body: comment.body,
           author: comment.author,
           subreddit: comment.subreddit,
-          certainty: String(comment.certainty * 100).substring(0, 6)
+          certainty: String(comment.certainty * 100).substring(0, 6) + " %"
         });
       });
 
@@ -111,15 +111,22 @@ h2 {
   justify-content: center;
 }
 
+.table {
+  margin-top:0px;
+}
+
 .refresh {
   float: right;
   margin: 10px;
-  margin-right: 20px;
+  margin-right: 8px;
+  margin-left: 1220px;
 }
 
 .filter-hate {
   float: right;
   margin: 10px;
+  margin-top:0px;
   margin-right: 20px;
+  margin-left: 1110px;
 }
 </style>
