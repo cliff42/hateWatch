@@ -47,13 +47,9 @@ export default {
 </script>
 
 <style scoped>
-
-.left-col {
-  float:left;
-}
-
-.right-col {
-  float: right;
-}
-
+  .refresh {
+    float: right;
+    margin: 10px;
+    margin-right: 20px;
+  }
 </style>

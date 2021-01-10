@@ -84,13 +84,6 @@ export default {
   flex-direction: column;
   margin: 40px 40px;
   padding: 20px;
-  /* justify-content: left; */
-  /* align-items: center;
-  justify-content: center; */
-}
-
-.input {
-  /* width: 100%; */
 }
 
 .check {

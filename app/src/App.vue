@@ -2,7 +2,7 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Deploy</router-link> | 
-      <router-link to="/comments">Comments</router-link>
+      <router-link to="/bots">Bots</router-link>
     </div>
     <router-view/>
   </div>
