@@ -122,6 +122,16 @@ app.delete('/deleteBot', async (req, res) => {
     }
 });
 
+app.delete('/getCommentData', async (req, res) => {
+    try {
+        //TODO: send back data from reddit bot
+        res.status(200).send(`${req.body.name} deleted`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
+
 
 
 // ----------------------------------------------------------------------------------------
