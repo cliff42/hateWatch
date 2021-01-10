@@ -101,7 +101,7 @@ const connectDB = async () => {
 
 connectDB();
 
-async function analyzeContents(body, bot) {
+async function analyzeContents(comment, bot) {
 // names of comment object properties obtained by logging comment objects from snoowrap requets
 // example of how you would save a comment to db
 /*
@@ -117,41 +117,40 @@ new Comment({
 */
 
 // TODO: this is probably wrong so you may want to fix it
-    const isHateSpeech = '';
-    const accuracy = '';
+    let isHateSpeech = false;
+    let certainty = 0;
 
     try {
         const [automl_response] = await automl_client.predict({
             name: modelFullId,
             payload: {
                 textSnippet: {
-                    content: body, // TODO: assuming body is the comment/ string want to analyize
+                    content: comment.body, // TODO: assuming body is the comment/ string want to analyize
                     mimeType: 'text/plain', // Types: 'test/plain', 'text/html'
                 },
             },
         });
         
-        //TODO: there should only be one of these - needs testing though 
-        for (const annotationPayload of automl_response.payload) {
-            isHateSpeech = annotationPayload.displayName;
-            accuracy = classification.score;
-        }
+        certainty = automl_response.payload[1].classification.score;
     } catch (err) {
         console.log(err)
     }
 
     // only saves if the comment is hatespeech
     //TODO: not sure how to fill in the other data sections here so i just put '' for now
-    if(isHateSpeech === '1') {
-        new Comment({
-            body: body,
-            author: '',
-            redditID: '',
-            isHateSpeech: true,
-            subreddit: '',
-        }).save();
+    if(certainty >= 0.5) {
+        isHateSpeech = true;
     }
-
+    new Comment({
+        body: comment.body,
+        author: comment.author.name,
+        redditID: comment.id,
+        isHateSpeech: isHateSpeech,
+        certainty: certainty,
+        subreddit: comment.subreddit.display_name,
+    }).save().catch(err => {
+        console.error(err);
+    });
 }
 
 
@@ -181,9 +180,7 @@ async function runBots() {
             for (let comment of comments) {
                 if (commentsSeen[comment.id] === undefined) {
                     // put logic in here to prevent redundant computations
-                    //analyzeContents(comment.body, bot);
-                    console.log(comment);
-                    
+                    analyzeContents(comment, bot);                    
                 }
             };
         } catch (err) {
@@ -272,7 +269,7 @@ app.delete('/deleteBot', async (req, res) => {
     }
 });
 
-app.get('/getCommentData', async (req, res) => {
+app.get('/getHateComments', async (req, res) => {
     try {
         hateComments = await Comment.find({subreddit: req.body.subreddit,
                                             isHateSpeech: true});
@@ -283,6 +280,25 @@ app.get('/getCommentData', async (req, res) => {
     }
 });
 
+app.get('/getComments', async (req, res) => {
+    try {
+        hateComments = await Comment.find({subreddit: req.body.subreddit});
+        res.status(200).send(hateComments);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
+
+app.get('/getAllComments', async (req, res) => {
+    try {
+        let comments = await Comment.find();
+        res.status(200).send(comments);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
 
 
 // ----------------------------------------------------------------------------------------

@@ -6,6 +6,7 @@ const CommentSchema = mongoose.Schema({
     author: String,
     redditID: String,
     isHateSpeech: Boolean,
+    certainty: Number,
     subreddit: String
 });
 
