@@ -18,13 +18,16 @@
           Detect Fake News
           </b-form-checkbox>
       </b-form-group>
-      <b-button variant="outline-primary">Deploy</b-button>
+      <label class="submit">
+        <b-button variant="outline-primary" @click="onSubmit">Deploy</b-button>
+      </label>
     </b-form>
   </div>
 </template>
 
 <script>
 import { ref } from '@vue/composition-api';
+import axios from 'axios';
 
 export default {
   name: 'Home',
@@ -34,11 +37,33 @@ export default {
     const optionSpeech = ref('');
     const optionNews = ref('');
 
+    async function onSubmit() {
+      console.log('test');
+      console.log(optionNews.value);
+      console.log(optionSpeech.value);
+      // post to be
+
+      var formData = {
+        "name": name,
+        "subreddit": subreddit,
+        "optionSpeech": optionSpeech,
+        "optionNews": optionNews,
+      }
+
+      try {
+        console.log(formData.value);
+        await axios.post('http://localhost:4000/postBot', formData);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     return {
       name,
       subreddit,
       optionSpeech,
-      optionNews
+      optionNews,
+      onSubmit,
     };
   }
 }
