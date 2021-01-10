@@ -35,6 +35,10 @@ export default {
       {
         name: 'Comments',
         path: '/comments'
+      },
+      {
+        name: 'Trends',
+        path: '/trends'
       }
     ];
 
