@@ -177,6 +177,7 @@ async function runBots() {
             let comments = await reddit.getSubreddit(bot.subreddit).getNewComments({limit: 100});
             for (let comment of comments) {
                 if (commentsSeen[comment.id] === undefined) {
+                    commentsSeen[comment.id] = comment;
                     // put logic in here to prevent redundant computations
                     analyzeContents(comment, bot);                    
                 }
