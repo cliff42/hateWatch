@@ -1,6 +1,9 @@
 <template>
   <div class="bots">
     <h2>Bots</h2>
+     <label class="refresh">
+      <b-button variant="outline-primary" @click="getBots">Refresh</b-button>
+    </label>
     <div class="table">
       <b-table striped hover bordered :items="bots" :fields="fields">
         <template #cell(actions)="row">
@@ -136,6 +139,7 @@ export default {
       fields,
       newFields,
       handleModal,
+      getBots,
       deleteBot,
       editBot,
     };
@@ -158,7 +162,7 @@ export default {
 
 .table {
   width: 1000px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .actions-col {
@@ -167,6 +171,13 @@ export default {
 
 .actionButton {
   margin: 4px;
+}
+
+.refresh {
+  float: right;
+  margin-right: 8px;
+  margin-left: 1220px;
+  margin-bottom: 0px;
 }
 
 .input {
