@@ -17,6 +17,7 @@ const config = {
 
 reddit = new snoowrap(config);
 */
+
 const app = express();
 
 const connectDB = async () => {
@@ -46,27 +47,27 @@ function analyzeContents(body, bot) {
 
 }
 
-let bot = new Bot({});
-bot.save().catch(err => {console.log(err)});
-/*
+
 const client = new language.LanguageServiceClient();
-let subreddits = [];
-let bots = Bot.find().then((doc) => {
-    doc.forEach((bot) => {
-        subreddits.push(bot.subreddit);
-    })
-});
 
 // main
-(async () => {
-for (let bot of bots) {
-    let comments = await reddit.getSubreddit(bot.subreddit).getNewComments({limit: 100});
-    for (let comment of comments) {
-        analyzeContents(comment.body, bot);
+async function runBots() {
+    let bots = await Bot.find();
+    for (let bot of bots) {
+        let comments = await reddit.getSubreddit(bot.subreddit).getNewComments({limit: 100});
+        for (let comment of comments) {
+            analyzeContents(comment.body, bot);
+        };
     }
-}});
+}
 
-*/
+function main() {
+    setInterval(runBots, 30000);
+};
+
+main();
+
+
 
 
 // endpoints 
