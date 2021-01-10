@@ -50,33 +50,33 @@ const automl_client = new automl.PredictionServiceClient();
 
 const modelFullId = automl_client.modelPath('893071275610', 'us-central1', 'TCN5883893539531653120');
 
-const testAutoML = async () => {
-    const test_string = 'is this hate text????'
+// const testAutoML = async () => {
+//     const test_string = 'is this hate text????'
 
-    try {
-        console.log("TESTING AUTOML")
-        const [automl_response] = await automl_client.predict({
-            name: modelFullId,
-            payload: {
-                textSnippet: {
-                  content: test_string,
-                  mimeType: 'text/plain', // Types: 'test/plain', 'text/html'
-                },
-              },
-        });
-        for (const annotationPayload of automl_response.payload) {
-            console.log(`Predicted class name: ${annotationPayload.displayName}`);
-            console.log(
-              `Predicted class score: ${annotationPayload.classification.score}`
-            );
-          }
-    } catch (err) {
-        console.log("AUTOML FAILED")
-        console.log(err)
-    }
-}
+//     try {
+//         console.log("TESTING AUTOML")
+//         const [automl_response] = await automl_client.predict({
+//             name: modelFullId,
+//             payload: {
+//                 textSnippet: {
+//                   content: test_string,
+//                   mimeType: 'text/plain', // Types: 'test/plain', 'text/html'
+//                 },
+//               },
+//         });
+//         for (const annotationPayload of automl_response.payload) {
+//             console.log(`Predicted class name: ${annotationPayload.displayName}`);
+//             console.log(
+//               `Predicted class score: ${annotationPayload.classification.score}`
+//             );
+//           }
+//     } catch (err) {
+//         console.log("AUTOML FAILED")
+//         console.log(err)
+//     }
+// }
 
-testAutoML();
+// testAutoML();
 
 
 const connectDB = async () => {
