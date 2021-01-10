@@ -9,6 +9,9 @@ const Bot = require('./models/Bot');
 const cors = require('cors');
 
 
+// use this to keep track of bots without 
+let allBots = {};
+
 const config = {
 	client_id: process.env.client_id,
 	client_secret: process.env.client_secret,
@@ -55,6 +58,16 @@ function analyzeContents(body, bot) {
 
 const client = new language.LanguageServiceClient();
 
+
+
+
+
+/*
+for (let bot of bots) {
+    allBots[bot._id] = bot;
+}
+*/
+
 // main
 
 async function runBots() {
@@ -76,7 +89,7 @@ async function runBots() {
 }
 
 function main() {
-    setInterval(runBots, 1000);
+    setInterval(runBots, 5000);
 };
 
 main();

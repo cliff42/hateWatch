@@ -16,6 +16,9 @@ const BotSchema = mongoose.Schema({
     dateCreated: {
         type: Date,
         default: Date.now,
+    },
+    comments: {
+        
     }
 
 
