@@ -83,7 +83,13 @@ app.get('/getAll', async (req, res) => {
 });
 
 
-//
+/*body example
+    {"name": "test1",
+    "subreddit": "blah",
+    "fakeNews": "true",
+    "hateSpeech": "true",
+    "subreddit": "test"}
+*/
 app.post('/postBot', async (req, res) => {
     let bot = new Bot({
         fakeNews: req.body.optionNews,
@@ -92,9 +98,6 @@ app.post('/postBot', async (req, res) => {
         name: req.body.name
     });
     console.log(bot);
-
-
-
     try {
         await bot.save();
         console.log('bot saved');
@@ -105,12 +108,20 @@ app.post('/postBot', async (req, res) => {
     }
 });
 
+
+/*body example
+    {"name": "test1",
+    "newAttributes": {"fakeNews": "true",
+    "hateSpeech": "true",
+    "subreddit": "EDIT_TEST"}}
+*/
 app.put('/editBot', async (req, res) => {
     try {
         let bot = await Bot.findOne({name: req.body.name});
         for (attr in req.body.newAttributes) {
             bot[attr] = req.body.newAttributes[attr];
         }
+        // changing name to an existing name should cause save error
         await bot.save();
         res.status(200).send(bot);
 
