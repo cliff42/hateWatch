@@ -65,8 +65,8 @@ export default {
 
       if (comments.value.length === 0) {
         comments.value.push({
-          body: 'No comments',
-          author: 'No comments',
+          body: 'No comments found',
+          author: 'No comments found',
           certainty: 'N/A'
         })
       }
