@@ -2,7 +2,13 @@
   <div class="bots">
     <h2>Bots</h2>
     <div class="table">
-      <b-table striped hover bordered :items="bots" :fields="fields"></b-table>
+      <b-table striped hover bordered :items="bots" :fields="fields">
+        <template #cell(actions)="row">
+          <b-button size="sm" variant="outline-primary" @click="deleteBot(row.item.name)">
+            <b-icon-trash />
+          </b-button>
+        </template>
+      </b-table>
     </div>
   </div>
 </template>
@@ -26,11 +32,17 @@ export default {
       {
         key: 'subreddit',
         sortable: true
+      },
+      {
+        key: 'actions',
+        label: 'Actions',
+        sortable: false,
+        tdClass: 'actions-col'
       }
     ];
 
     async function getBots() {
-      const response = await axios.get('localhost:4000/getAll');
+      const response = await axios.get('http://localhost:4000/getAll');
 
       response.forEach(bot => {
         bots.value.push({
@@ -42,38 +54,48 @@ export default {
       });
     }
 
-    // getBots();
+    function deleteBot(botName) {
+      axios.delete('http://localhost:4000/deleteBot', {
+        name: botName
+      });
 
-    bots.value = [
-      {
-        name: 'Name 1',
-        subreddit: 'Sub 1',
-        fakeNews: true,
-        hateSpeech: true
-      },
-      {
-        name: 'Name 2',
-        subreddit: 'Sub 2',
-        fakeNews: false,
-        hateSpeech: true
-      },
-      {
-        name: 'Name 3',
-        subreddit: 'Sub 3',
-        fakeNews: false,
-        hateSpeech: false
-      }
-    ];
+      bots.value.splice(bots.value.findIndex(bot => bot.name === botName), 1);
+    }
+
+    getBots();
+
+    // Mock data
+    // bots.value = [
+    //   {
+    //     name: 'Name 1',
+    //     subreddit: 'Sub 1',
+    //     fakeNews: true,
+    //     hateSpeech: true
+    //   },
+    //   {
+    //     name: 'Name 2',
+    //     subreddit: 'Sub 2',
+    //     fakeNews: false,
+    //     hateSpeech: true
+    //   },
+    //   {
+    //     name: 'Name 3',
+    //     subreddit: 'Sub 3',
+    //     fakeNews: false,
+    //     hateSpeech: false
+    //   }
+    // ];
 
     return {
       bots,
-      fields
+      fields,
+      deleteBot
     };
   }
 }
 </script>
 
-<style scoped>
+<style>
 .bots {
   display: flex;
   flex-direction: column;
@@ -84,6 +106,10 @@ export default {
 
 .table {
   width: 1000px;
-  margin: 20px;
+  margin-top: 20px;
+}
+
+.actions-col {
+  width: 10%;
 }
 </style>
