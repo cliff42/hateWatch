@@ -5,7 +5,10 @@ const mongoose = require('mongoose');
 const BotSchema = mongoose.Schema({
     fakeNews: Boolean,
     hateSpeech: Boolean,
-    subreddit: String,
+    subreddit: {
+        type: String,
+        unique: true,
+    },
     name: {
         type: String,
         unique: true,
