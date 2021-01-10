@@ -164,4 +164,5 @@ export default {
   justify-content: center;
   flex-direction: row;
 }
+
 </style>

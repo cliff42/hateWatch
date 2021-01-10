@@ -4,20 +4,10 @@
     <label class="refresh">
       <b-button variant="outline-primary" @click="onRefresh">Refresh</b-button>
     </label>
-    <table class="table table-striped">
-      <thead>
-        <th scope="col">User Name</th>
-        <th scope="col">Comment</th>
-      </thead>
-      <tbody>
-        <tr>
-          <td scope="row" v-for="comment in comments" v-bind:key="comment.id">{{comment.name}}</td>
-        </tr>
-        <tr>
-          <td scope="row" v-for="comment in comments" v-bind:key="comment.id">{{comment.text}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table">
+      <b-table striped hover bordered :items="comments" :fields="fields">
+      </b-table>
+    </div>
   </div>
 </template>
 
@@ -28,19 +18,39 @@ import axios from 'axios';
 export default {
   name: 'Comments',
   setup() {
-    const comments = ref([{name:'test1', text:'comment1'}, {name:'test2', text:'comment2'}]);
+    const comments = ref([]);
+    const fields = ref([]);
+
+    fields.value = [
+      {
+        key: 'author',
+        label: 'Author',
+        sortable: true
+      },
+      {
+        key: 'body',
+        label: 'Comment',
+        sortable: true
+      },
+    ];
 
     async function onRefresh() {
 
-      try {
-        comments.value = await axios.get('http://localhost:4000/getCommentData');
-      } catch (err) {
-        console.log(err);
-      }
-    };
+      const response = await axios.get('http://localhost:4000/getAllComments');
+
+      response.data.forEach(comment => {
+        comments.value.push({
+          body: comment.body,
+          author: comment.author,
+        });
+      });
+    }
+
+    onRefresh();
 
     return {
       comments,
+      fields,
       onRefresh,
     };
   }
