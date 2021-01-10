@@ -197,7 +197,7 @@ async function main() {
     setInterval(runBots, 5000);
 };
 
-main();
+//main();
 
 
 
@@ -298,6 +298,21 @@ app.get('/getAllComments', async (req, res) => {
         console.error(err);
         res.status(500).send(err);
     }
+});
+
+
+app.get('/timeSeriesStatic', async (req, res) => {
+    // random data for demo purposes
+    const PERIOD = 30;
+    let bots = await Bot.find();
+    let result = {};
+    for (let bot of bots) {
+        result[bot.subreddit] = [];
+        for (i = 0; i < PERIOD; i++) {
+            result[bot.subreddit].push(Math.floor(Math.random() * 10));
+        }
+    }
+    res.status(200).send(result);
 });
 
 app.get('/timeSeries', async (req, res) => {
