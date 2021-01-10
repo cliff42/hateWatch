@@ -6,9 +6,13 @@ const snoowrap = require('snoowrap');
 const language = require('@google-cloud/language');
 const testURI = process.env.MONGOURI;
 const Bot = require('./models/Bot');
+const Comment = require('./models/Comment');
 const cors = require('cors');
 const automl = require('@google-cloud/automl');
 const fs = require('fs');
+
+// use this to keep track of bots without 
+let allBots = {};
 
 const config = {
 	client_id: process.env.client_id,
@@ -103,14 +107,38 @@ const connectDB = async () => {
 connectDB();
 
 function analyzeContents(body, bot) {
+// names of comment object properties obtained by logging comment objects from snoowrap requets
+// example of how you would save a comment to db
+/*
+new Comment({
+    body: comment.body,
+    author: comment.author.name,
+    redditID: comment.id,
+    isHateSpeech: true/false,
+    subreddit: subreddit.display_name
+}).save();
 
+
+*/
 
 }
 
 
 const client = new language.LanguageServiceClient();
 
+
+
+
+
+/*
+for (let bot of bots) {
+    allBots[bot._id] = bot;
+}
+*/
+
 // main
+
+commentsSeen = {};
 
 async function runBots() {
     //console.log('looping');
@@ -120,8 +148,12 @@ async function runBots() {
         try {
             let comments = await reddit.getSubreddit(bot.subreddit).getNewComments({limit: 100});
             for (let comment of comments) {
-                //analyzeContents(comment.body, bot);
-                console.log(comment.body);
+                if (commentsSeen[comment.id] === undefined) {
+                    // put logic in here to prevent redundant computations
+                    //analyzeContents(comment.body, bot);
+                    console.log(comment);
+                    
+                }
             };
         } catch (err) {
             console.error(err);
@@ -130,8 +162,12 @@ async function runBots() {
     
 }
 
-function main() {
-    setInterval(runBots, 1000);
+async function main() {
+    comments = await Comment.find();
+    for (comment of comments) {
+        commentsSeen[comment.redditID] = comment;
+    }
+    setInterval(runBots, 5000);
 };
 
 main();
@@ -205,10 +241,11 @@ app.delete('/deleteBot', async (req, res) => {
     }
 });
 
-app.delete('/getCommentData', async (req, res) => {
+app.get('/getCommentData', async (req, res) => {
     try {
-        //TODO: send back data from reddit bot
-        res.status(200).send(`${req.body.name} deleted`);
+        hateComments = await Comment.find({subreddit: req.body.subreddit,
+                                            isHateSpeech: true});
+        res.status(200).send(hateComments);
     } catch (err) {
         console.error(err);
         res.status(500).send(err);

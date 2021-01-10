@@ -16,7 +16,12 @@ const BotSchema = mongoose.Schema({
     dateCreated: {
         type: Date,
         default: Date.now,
-    }
+    },
+    comments: [{
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "Comment",
+        default: [],
+      }]
 
 
 
