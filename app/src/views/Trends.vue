@@ -1,6 +1,6 @@
 <template>
   <div class="trends">
-    <h2>Trends</h2>
+    <h1>Trends</h1>
       <TrendChart class="chart"
       :interactive="true"
       :datasets="data"
@@ -13,6 +13,7 @@
       }'
       :min="0">
     </TrendChart>
+    <h5>Date</h5>
   </div>
 </template>
 
@@ -93,5 +94,10 @@ export default {
 .line-class-2 .stroke {
   stroke: #fbe1b6;
   stroke-width: 2;
+}
+
+.y-axis {
+  display: flex;
+  vertical-align: text-top;
 }
 </style>
