@@ -7,7 +7,8 @@ const language = require('@google-cloud/language');
 const testURI = process.env.MONGOURI;
 const Bot = require('./models/Bot');
 const cors = require('cors');
-
+const automl = require('@google-cloud/automl');
+const fs = require('fs');
 
 const config = {
 	client_id: process.env.client_id,
@@ -33,6 +34,50 @@ app.use(bodyParser.json());
 //   client.close();
 // });
 
+//********** */ 
+// GCP AUTOML
+//********** */
+
+const automl_client = new automl.PredictionServiceClient();
+
+//application/json" \
+//https://automl.googleapis.com/v1/projects/893071275610/locations/us-central1/models/TCN5883893539531653120:predict \
+//-//d @request.json
+
+const modelFullId = automl_client.modelPath('893071275610', 'us-central1', 'TCN5883893539531653120');
+
+console.log(modelFullId);
+
+
+
+const testAutoML = async () => {
+    const test_string = 'is this hate text????'
+
+    try {
+        console.log("TESTING AUTOML")
+        const [automl_response] = await automl_client.predict({
+            name: modelFullId,
+            payload: {
+                textSnippet: {
+                  content: test_string,
+                  mimeType: 'text/plain', // Types: 'test/plain', 'text/html'
+                },
+              },
+        });
+        for (const annotationPayload of automl_response.payload) {
+            console.log(`Predicted class name: ${annotationPayload.displayName}`);
+            console.log(
+              `Predicted class score: ${annotationPayload.classification.score}`
+            );
+          }
+    } catch (err) {
+        console.log("AUTOML FAILED")
+        console.log(err)
+    }
+}
+
+testAutoML();
+
 
 const connectDB = async () => {
     try {
@@ -49,6 +94,7 @@ const connectDB = async () => {
       console.log("MongoDB Connected...");
     } catch (err) {
       console.error(err.message);
+      console.log('ARHAUSHUDHAUISHDASHDIUHASD');
       // Exit process with failure
       process.exit(1);
     }

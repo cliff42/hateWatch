@@ -6,6 +6,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/automl": "^2.3.1",
     "@google-cloud/language": "^4.2.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
