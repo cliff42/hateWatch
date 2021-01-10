@@ -7,7 +7,7 @@ const language = require('@google-cloud/language');
 const testURI = process.env.MONGOURI;
 const Bot = require('./models/Bot');
 const cors = require('cors');
-/*
+
 
 const config = {
 	client_id: process.env.client_id,
@@ -18,7 +18,7 @@ const config = {
 };
 
 reddit = new snoowrap(config);
-*/
+
 
 const app = express();
 app.use(cors());
@@ -52,27 +52,36 @@ function analyzeContents(body, bot) {
 
 }
 
-/*
+
 const client = new language.LanguageServiceClient();
 
 // main
+
 async function runBots() {
+    //console.log('looping');
+    
     let bots = await Bot.find();
     for (let bot of bots) {
-        let comments = await reddit.getSubreddit(bot.subreddit).getNewComments({limit: 100});
-        for (let comment of comments) {
-            analyzeContents(comment.body, bot);
-        };
+        try {
+            let comments = await reddit.getSubreddit(bot.subreddit).getNewComments({limit: 100});
+            for (let comment of comments) {
+                //analyzeContents(comment.body, bot);
+                console.log(comment.body);
+            };
+        } catch (err) {
+            console.error(err);
+        }
     }
+    
 }
 
 function main() {
-    setInterval(runBots, 30000);
+    setInterval(runBots, 1000);
 };
 
 main();
 
-*/
+
 
 
 // endpoints 
@@ -92,8 +101,8 @@ app.get('/getAll', async (req, res) => {
 */
 app.post('/postBot', async (req, res) => {
     let bot = new Bot({
-        fakeNews: req.body.optionNews,
-        hateSpeech: req.body.optionBody,
+        fakeNews: req.body.fakeNews,
+        hateSpeech: req.body.hateSpeech,
         subreddit: req.body.subreddit,
         name: req.body.name
     });
