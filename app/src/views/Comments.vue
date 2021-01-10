@@ -36,6 +36,11 @@ export default {
         label: 'Comment',
         sortable: true
       },
+      {
+        key: 'certainty',
+        label: 'Confidence',
+        sortable: true
+      }
     ];
 
     async function onRefresh() {
@@ -50,9 +55,11 @@ export default {
       }
 
       response.data.forEach(comment => {
+        console.log(comment.certainty);
         comments.value.push({
           body: comment.body,
           author: comment.author,
+          certainty: String(comment.certainty * 100).substring(0, 6)
         });
       });
 
@@ -60,6 +67,7 @@ export default {
         comments.value.push({
           body: 'No comments',
           author: 'No comments',
+          certainty: 'N/A'
         })
       }
     }
@@ -84,14 +92,25 @@ export default {
 </script>
 
 <style scoped>
+  .menu {
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+    align-items: center;
+    justify-content: center;
+  }
+
   .refresh {
     float: right;
+    flex-direction: row;
+    align-items: center;
     margin: 10px;
     margin-right: 20px;
   }
 
   .filter-hate {
     float: right;
+    flex-direction: row;
     margin: 10px;
     margin-right: 20px;
   }
