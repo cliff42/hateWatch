@@ -198,7 +198,7 @@ async function main() {
     setInterval(runBots, 5000);
 };
 
-main();
+// main();
 
 
 
@@ -244,6 +244,7 @@ app.post('/postBot', async (req, res) => {
     "subreddit": "EDIT_TEST"}}
 */
 app.put('/editBot', async (req, res) => {
+    console.log('EDIT REQ: ' + req.body.name)
     try {
         let bot = await Bot.findOne({name: req.body.name});
         for (attr in req.body.newAttributes) {
