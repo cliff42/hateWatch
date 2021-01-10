@@ -3,7 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const snoowrap = require('snoowrap');
-const language = require('@google-cloud/language');
 const testURI = process.env.MONGOURI;
 const Bot = require('./models/Bot');
 const Comment = require('./models/Comment');
@@ -152,7 +151,7 @@ new Comment({
 }
 
 
-const client = new language.LanguageServiceClient();
+
 
 
 
