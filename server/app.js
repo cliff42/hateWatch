@@ -116,7 +116,7 @@ new Comment({
 
 */
 
-// TODO: this is probably wrong so you may want to fix it
+
     let isHateSpeech = false;
     let certainty = 0;
 
@@ -125,7 +125,7 @@ new Comment({
             name: modelFullId,
             payload: {
                 textSnippet: {
-                    content: comment.body, // TODO: assuming body is the comment/ string want to analyize
+                    content: comment.body, 
                     mimeType: 'text/plain', // Types: 'test/plain', 'text/html'
                 },
             },
@@ -136,8 +136,6 @@ new Comment({
         console.log(err)
     }
 
-    // only saves if the comment is hatespeech
-    //TODO: not sure how to fill in the other data sections here so i just put '' for now
     if(certainty >= 0.5) {
         isHateSpeech = true;
     }
