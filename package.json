@@ -6,11 +6,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/language": "^4.2.1",
     "express": "^4.17.1",
     "express-validator": "^6.6.0",
     "heroku-ssl-redirect": "0.0.4",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.10",
-    "snoowrap": "^1.22.0"
+    "snoowrap": "^1.22.0",
+    "dotenv": "^8.2.0"
   }
 }
