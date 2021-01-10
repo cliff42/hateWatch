@@ -1,13 +1,49 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Deploy</router-link> | 
-      <router-link to="/bots">Bots</router-link> |
-      <router-link to="/comments">Comments</router-link>
+      <b-navbar toggleable="lg" type="light" variant="light">
+        <b-nav-item active-class="active" class="nav-link" v-for="route in links" 
+                    :key="route.path" :to="route.path" >
+          {{ route.name }} 
+        </b-nav-item>
+        <!-- <router-link to="/">Deploy</router-link> | 
+        <router-link to="/bots">Bots</router-link> |
+        <router-link to="/comments">Comments</router-link> -->
+      </b-navbar>
     </div>
     <router-view/>
   </div>
 </template>
+
+<script>
+import { ref } from '@vue/composition-api';
+
+export default {
+  name: 'App',
+  setup() {
+    const links = ref([]);
+    
+    links.value = [
+      {
+        name: 'Deploy',
+        path: '/'
+      },
+      {
+        name: 'Bots',
+        path: '/bots'
+      },
+      {
+        name: 'Comments',
+        path: '/comments'
+      }
+    ];
+
+    return {
+      links
+    };
+  }
+}
+</script>
 
 <style>
 #app {
@@ -18,16 +54,12 @@
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
-}
-
 #nav a {
   font-weight: bold;
   color: #2c3e50;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #FF5700;
 }
 </style>
