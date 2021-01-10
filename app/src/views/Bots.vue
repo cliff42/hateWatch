@@ -9,28 +9,28 @@
             <b-icon-trash />
           </b-button>
           <!-- update button -->
-          <b-button v-b-modal.edit-modal size="sm" variant="outline-primary" class="actionButton">
+          <b-button v-b-modal.edit-modal size="sm" @click="handleModal(row.item)" variant="outline-primary" class="actionButton">
             <b-icon-pencil />
           </b-button>
-          <b-modal id="edit-modal" title="Edit Bot" @ok="editBot(row.item.name, newFields)" class="actionButton">
-            <h5>Name: {{row.item.name}}</h5>
-            <label>
-              Subreddit: r/ 
-              <input type="text" v-model="newFields.subreddit" class="input">
-              (Previously: {{row.item.subreddit}})
-            </label>
-            <b-form-group class="checkbox">
-              <b-form-checkbox v-model="newFields.hateSpeech" class="check">
-                Detect Hate Speech
-              </b-form-checkbox>
-              <b-form-checkbox v-model="newFields.fakeNews" class="check">
-                Detect Fake News
-              </b-form-checkbox>
-            </b-form-group>
-          </b-modal>
         </template>
       </b-table>
     </div>
+    <b-modal id="edit-modal" title="Edit Bot" @ok="editBot(modalName, newFields)" class="actionButton">
+      <h5>Name: {{modalName}}</h5>
+      <label>
+        Subreddit: r/ 
+        <input type="text" v-model="newFields.subreddit" class="input">
+        (Previously: {{modalSub}}
+      </label>
+      <b-form-group class="checkbox">
+        <b-form-checkbox v-model="newHateSpeech" class="check">
+          Detect Hate Speech
+        </b-form-checkbox>
+        <b-form-checkbox v-model="newFakeNews" class="check">
+          Detect Fake News
+        </b-form-checkbox>
+      </b-form-group>
+    </b-modal>
   </div>
 </template>
 
@@ -42,8 +42,13 @@ export default {
   name: 'Bots',
   setup() {
     const bots = ref([{name:"bot1", subreddit:"sub1", hateSpeech:"true"}]);
+    const modalInfo= ref([]);
+    const modalSub = ref('');
+    const modalName = ref('');
     const fields = ref([]);
     const newFields = ref([]);
+    const newFakeNews = ref(false);
+    const newHateSpeech = ref(false);
 
     fields.value = [
       {
@@ -85,30 +90,46 @@ export default {
     }
 
     function editBot(botName, newInfo) {
-      const fullNewInfo = {
-        "name": botName,
-        "newAttributes": {"fakeNews": newInfo.fakeNew, "hateSpeech": newInfo.hateSpeech,},
-        "subreddit": newFields.subreddit};
       console.log('EDIT CALLED');
-      console.log(newInfo.hateSpeech);
-      console.log(newInfo.fakeNews);
+      console.log(botName);
+      console.log(newHateSpeech);
+      console.log(newFakeNews);
       console.log(newInfo.subreddit);
-      axios.put('http://localhost:4000/editBot', {
-        data: { name: botName, newAttributes: newInfo}
+      var formData = {
+        "name": botName,
+        "newAttributes": {
+          "subreddit": newInfo.subreddit,
+          "hateSpeech": newHateSpeech.value,
+          "fakeNews": newFakeNews.value,
+        }
+      }
+      console.log(axios.put('http://localhost:4000/editBot', formData));
+      // this.$forceUpdate();
+
             // {"name": "test1",
             // "newAttributes": {"fakeNews": "true",
             // "hateSpeech": "true",
             // "subreddit": "EDIT_TEST"}}
-      });
-      getBots();
+    }
+
+    function handleModal(bot) {
+      modalInfo.value = bot;
+      modalName.value = modalInfo.value.name;
+      modalSub.value = modalInfo.value.subreddit;
     }
 
     getBots();
 
     return {
       bots,
+      modalSub,
+      modalName,
+      modalInfo,
+      newFakeNews,
+      newHateSpeech,
       fields,
       newFields,
+      handleModal,
       deleteBot,
       editBot,
     };
