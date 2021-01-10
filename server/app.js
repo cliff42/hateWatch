@@ -329,7 +329,7 @@ app.get('/timeSeries', async (req, res) => {
             result[bot.subreddit] = [];
             for (i = 0; i < PERIOD; i++) {
                 let earliest = actualDate.setDate(endOfToday.getDate() - PERIOD + i);
-                let lastest = actualDate.setDate(endOfToday.getDate() - PERIOD + i + 1);
+                let latest = actualDate.setDate(endOfToday.getDate() - PERIOD + i + 1);
                 let num = await Comment.find({
                     datePosted: {
                     //$gte: new Date(actualDate.getFullYear(),
