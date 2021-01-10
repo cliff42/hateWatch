@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Bots from '../views/Bots.vue'
 import Comments from '../views/Comments.vue'
+import Trends from '../views/Trends.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,11 @@ const routes = [
     name: 'Comments',
     component: Comments
   },
+  {
+    path: '/trends',
+    name: 'Trends',
+    component: Trends
+  }
 ]
 
 const router = new VueRouter({
