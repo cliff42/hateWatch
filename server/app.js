@@ -300,6 +300,40 @@ app.get('/getAllComments', async (req, res) => {
     }
 });
 
+app.get('/timeSeries', async (req, res) => {
+    const PERIOD = 30;
+    const actualDate = new Date();
+    const endOfToday = new Date(actualDate.getFullYear(),
+    actualDate.getMonth(),
+    actualDate.getDate(),
+    23, 59, 59);
+    try {
+        let bots = await Bot.find();
+        let result = {};
+        for (let bot of bots) {
+            result[bot.subreddit] = [];
+            for (i = 0; i < PERIOD; i++) {
+                let earliest = actualDate.setDate(endOfToday.getDate() - PERIOD + i);
+                let lastest = actualDate.setDate(endOfToday.getDate() - PERIOD + i + 1);
+                let num = await Comment.find({
+                    datePosted: {
+                    //$gte: new Date(actualDate.getFullYear(),
+                    //actualDate.getMonth(),
+                    //actualDate.getDate(),
+                    //23, 59, 59),
+                    $gte: earliest,
+                    $lte: latest
+                }}).length;
+                result[bot.subreddit].push(num);
+            }
+        }
+        res.status(200).send(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
+
 
 // ----------------------------------------------------------------------------------------
 const PORT = process.env.PORT;
