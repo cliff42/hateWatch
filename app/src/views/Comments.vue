@@ -102,15 +102,12 @@ export default {
 
   .refresh {
     float: right;
-    flex-direction: row;
-    align-items: center;
     margin: 10px;
     margin-right: 20px;
   }
 
   .filter-hate {
     float: right;
-    flex-direction: row;
     margin: 10px;
     margin-right: 20px;
   }
