@@ -72,6 +72,10 @@ export default {
 </script>
 
 <style scoped>
+h2 {
+  font-weight: bold;
+}
+
 .menu {
   display: flex;
   padding: 50px;
