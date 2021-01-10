@@ -5,6 +5,7 @@ const snoowrap = require('snoowrap');
 const language = require('@google-cloud/language');
 const testURI = process.env.MONGOURI;
 const Bot = require('./models/Bot');
+const cors = require('cors');
 /*
 
 const config = {
@@ -19,6 +20,7 @@ reddit = new snoowrap(config);
 */
 
 const app = express();
+app.use(cors());
 
 const connectDB = async () => {
     try {
@@ -81,10 +83,10 @@ app.get('/getAll', async (req, res) => {
 //
 app.post('/postBot', async (req, res) => {
     let bot = new Bot({
-        fakeNews: req.body.fakeNews,
-        hateSpeech: req.body.hateSpeech,
-        subreddit: req.body.subreddit,
-        name: req.body.name
+        fakeNews: req.optionNews,
+        hateSpeech: req.optionBody,
+        subreddit: req.subreddit,
+        name: req.name
     });
 
     try {
