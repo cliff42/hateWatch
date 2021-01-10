@@ -62,6 +62,7 @@ export default {
         key: 'actions',
         label: 'Actions',
         sortable: false,
+        thClass: 'actions-col',
         tdClass: 'actions-col'
       }
     ];
@@ -131,6 +132,10 @@ export default {
 </script>
 
 <style>
+.bots h2 {
+  font-weight: bold;
+}
+
 .bots {
   display: flex;
   flex-direction: column;

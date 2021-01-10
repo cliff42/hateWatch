@@ -92,23 +92,27 @@ export default {
 </script>
 
 <style scoped>
-  .menu {
-    display: flex;
-    flex-direction: column;
-    padding: 50px;
-    align-items: center;
-    justify-content: center;
-  }
+h2 {
+  font-weight: bold;
+}
 
-  .refresh {
-    float: right;
-    margin: 10px;
-    margin-right: 20px;
-  }
+.menu {
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+  align-items: center;
+  justify-content: center;
+}
 
-  .filter-hate {
-    float: right;
-    margin: 10px;
-    margin-right: 20px;
-  }
+.refresh {
+  float: right;
+  margin: 10px;
+  margin-right: 20px;
+}
+
+.filter-hate {
+  float: right;
+  margin: 10px;
+  margin-right: 20px;
+}
 </style>
