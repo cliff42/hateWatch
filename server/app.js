@@ -1,9 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const snoowrap = require('snoowrap');
 const language = require('@google-cloud/language');
-const testURI = process.env.mongoURI;
+const testURI = process.env.MONGOURI;
 const Bot = require('./models/Bot');
+/*
 
 const config = {
 	client_id: process.env.client_id,
@@ -14,10 +16,8 @@ const config = {
 };
 
 reddit = new snoowrap(config);
-
+*/
 const app = express();
-
-connectDB();
 
 const connectDB = async () => {
     try {
@@ -39,12 +39,16 @@ const connectDB = async () => {
     }
   };
 
+connectDB();
 
 function analyzeContents(body, bot) {
 
 
 }
 
+let bot = new Bot({});
+bot.save().catch(err => {console.log(err)});
+/*
 const client = new language.LanguageServiceClient();
 let subreddits = [];
 let bots = Bot.find().then((doc) => {
@@ -54,26 +58,27 @@ let bots = Bot.find().then((doc) => {
 });
 
 // main
-
-for (bot of bots) {
+(async () => {
+for (let bot of bots) {
     let comments = await reddit.getSubreddit(bot.subreddit).getNewComments({limit: 100});
-    for (comment of comments) {
+    for (let comment of comments) {
         analyzeContents(comment.body, bot);
     }
-}
+}});
 
+*/
 
 
 // endpoints 
 
-app.get('/getAll', (req, res) => {
+app.get('/getAll', async (req, res) => {
     let bots = await Bot.find();
     res.send(bots);
 });
 
 
 //
-app.post('/postBot', (req, res) => {
+app.post('/postBot', async (req, res) => {
     let bot = new Bot({
         fakeNews: req.body.fakeNews,
         hateSpeech: req.body.hateSpeech,
@@ -89,7 +94,7 @@ app.post('/postBot', (req, res) => {
     }
 });
 
-app.put('/editBot', (req, res) => {
+app.put('/editBot', async (req, res) => {
     try {
         let bot = await Bot.findOne({name: req.body.name});
         for (attr in req.body.newAttributes) {
@@ -104,7 +109,7 @@ app.put('/editBot', (req, res) => {
     }    
 });
 
-app.delete('/deleteBot', (req, res) => {
+app.delete('/deleteBot', async (req, res) => {
     try {
         await Bot.deleteOne({name: req.body.name});
         res.status(200).send(`${req.body.name} deleted`);
