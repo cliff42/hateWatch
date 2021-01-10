@@ -7,7 +7,8 @@ const CommentSchema = mongoose.Schema({
     redditID: String,
     isHateSpeech: Boolean,
     certainty: Number,
-    subreddit: String
+    subreddit: String,
+    datePosted: Date
 });
 
 const Comment = mongoose.model("comment", CommentSchema);

@@ -145,6 +145,7 @@ new Comment({
         isHateSpeech: isHateSpeech,
         certainty: certainty,
         subreddit: comment.subreddit.display_name,
+        datePosted: new Date(comment.created_utc * 1000),
     }).save().catch(err => {
         console.error(err);
     });
