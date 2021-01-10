@@ -44,7 +44,7 @@ export default {
     async function getBots() {
       const response = await axios.get('http://localhost:4000/getAll');
 
-      response.forEach(bot => {
+      response.data.forEach(bot => {
         bots.value.push({
           name: bot.name,
           subreddit: bot.subreddit,
@@ -56,7 +56,7 @@ export default {
 
     function deleteBot(botName) {
       axios.delete('http://localhost:4000/deleteBot', {
-        name: botName
+        data: { name: botName }
       });
 
       bots.value.splice(bots.value.findIndex(bot => bot.name === botName), 1);
