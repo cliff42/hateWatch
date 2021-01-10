@@ -4,11 +4,9 @@
     <div class="table">
       <b-table striped hover bordered :items="bots" :fields="fields">
         <template #cell(actions)="row">
-          <!-- delete button -->
           <b-button size="sm" variant="outline-primary" @click="deleteBot(row.item.name)">
             <b-icon-trash />
           </b-button>
-          <!-- update button -->
           <b-button v-b-modal.edit-modal size="sm" @click="handleModal(row.item)" variant="outline-primary" class="actionButton">
             <b-icon-pencil />
           </b-button>
