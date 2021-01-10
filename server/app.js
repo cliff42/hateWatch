@@ -165,7 +165,7 @@ for (let bot of bots) {
 */
 
 // main
-
+// heterogeneous values of obj properties is hopefully ok (mongoose documents and snoowrap comments)
 commentsSeen = {};
 
 async function runBots() {
