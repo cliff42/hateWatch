@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require("body-parser");
 const snoowrap = require('snoowrap');
 const language = require('@google-cloud/language');
 const testURI = process.env.MONGOURI;
@@ -21,6 +22,8 @@ reddit = new snoowrap(config);
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
+
 
 const connectDB = async () => {
     try {
@@ -49,7 +52,7 @@ function analyzeContents(body, bot) {
 
 }
 
-
+/*
 const client = new language.LanguageServiceClient();
 
 // main
@@ -69,7 +72,7 @@ function main() {
 
 main();
 
-
+*/
 
 
 // endpoints 
@@ -83,16 +86,21 @@ app.get('/getAll', async (req, res) => {
 //
 app.post('/postBot', async (req, res) => {
     let bot = new Bot({
-        fakeNews: req.optionNews,
-        hateSpeech: req.optionBody,
-        subreddit: req.subreddit,
-        name: req.name
+        fakeNews: req.body.optionNews,
+        hateSpeech: req.body.optionBody,
+        subreddit: req.body.subreddit,
+        name: req.body.name
     });
+    console.log(bot);
+
+
 
     try {
         await bot.save();
-        res.status(200);
+        console.log('bot saved');
+        res.status(200).send(bot);
     } catch (err) {
+        console.error(err);
         res.status(500).send(err);
     }
 });
