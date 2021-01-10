@@ -5,7 +5,7 @@
       <b-button variant="outline-primary" @click="onRefresh">Refresh</b-button>
     </label>
     <ul>
-      <li v-for="comment in comments" v-bind:key="comment.id">{{comment.text}}</li>
+      <li v-for="comment in comments" v-bind:key="comment.id">{{comment.name}}{{comment.text}}</li>
     </ul>
   </div>
 </template>
