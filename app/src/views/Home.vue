@@ -10,14 +10,14 @@
         <b-form-input class="input" type="text" 
                       placeholder="Subreddit" v-model="subreddit"/>
       </b-form-group>
-      <b-form-group class="checkbox">
+      <!-- <b-form-group class="checkbox">
           <b-form-checkbox v-model="optionSpeech" class="check">
           Detect Hate Speech
           </b-form-checkbox>
           <b-form-checkbox v-model="optionNews" class="check">
           Detect Fake News
           </b-form-checkbox>
-      </b-form-group>
+      </b-form-group> -->
       <label class="submit">
         <b-button variant="outline-primary" @click="onSubmit">Deploy</b-button>
       </label>
@@ -72,6 +72,10 @@ export default {
 </script>
 
 <style scoped>
+h2 {
+  font-weight: bold;
+}
+
 .menu {
   display: flex;
   padding: 50px;

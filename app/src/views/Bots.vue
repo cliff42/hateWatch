@@ -4,11 +4,9 @@
     <div class="table">
       <b-table striped hover bordered :items="bots" :fields="fields">
         <template #cell(actions)="row">
-          <!-- delete button -->
           <b-button size="sm" variant="outline-primary" @click="deleteBot(row.item.name)">
             <b-icon-trash />
           </b-button>
-          <!-- update button -->
           <b-button v-b-modal.edit-modal size="sm" @click="handleModal(row.item)" variant="outline-primary" class="actionButton">
             <b-icon-pencil />
           </b-button>
@@ -20,16 +18,16 @@
       <label>
         Subreddit: r/ 
         <input type="text" v-model="newFields.subreddit" class="input">
-        (Previously: {{modalSub}}
+        (Previously: {{modalSub}})
       </label>
-      <b-form-group class="checkbox">
+      <!-- <b-form-group class="checkbox">
         <b-form-checkbox v-model="newHateSpeech" class="check">
           Detect Hate Speech
         </b-form-checkbox>
         <b-form-checkbox v-model="newFakeNews" class="check">
           Detect Fake News
         </b-form-checkbox>
-      </b-form-group>
+      </b-form-group> -->
     </b-modal>
   </div>
 </template>
@@ -47,8 +45,8 @@ export default {
     const modalName = ref('');
     const fields = ref([]);
     const newFields = ref([]);
-    const newFakeNews = ref(false);
-    const newHateSpeech = ref(false);
+    // const newFakeNews = ref(false);
+    // const newHateSpeech = ref(false);
 
     fields.value = [
       {
@@ -64,6 +62,7 @@ export default {
         key: 'actions',
         label: 'Actions',
         sortable: false,
+        thClass: 'actions-col',
         tdClass: 'actions-col'
       }
     ];
@@ -90,17 +89,12 @@ export default {
     }
 
     function editBot(botName, newInfo) {
-      console.log('EDIT CALLED');
-      console.log(botName);
-      console.log(newHateSpeech);
-      console.log(newFakeNews);
-      console.log(newInfo.subreddit);
       var formData = {
         "name": botName,
         "newAttributes": {
           "subreddit": newInfo.subreddit,
-          "hateSpeech": newHateSpeech.value,
-          "fakeNews": newFakeNews.value,
+          "hateSpeech": true,
+          "fakeNews": false
         }
       }
       console.log(axios.put('http://localhost:4000/editBot', formData));
@@ -125,8 +119,8 @@ export default {
       modalSub,
       modalName,
       modalInfo,
-      newFakeNews,
-      newHateSpeech,
+      // newFakeNews,
+      // newHateSpeech,
       fields,
       newFields,
       handleModal,
@@ -138,6 +132,10 @@ export default {
 </script>
 
 <style>
+.bots h2 {
+  font-weight: bold;
+}
+
 .bots {
   display: flex;
   flex-direction: column;
