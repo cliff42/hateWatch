@@ -64,28 +64,6 @@ export default {
 
     getBots();
 
-    // Mock data
-    // bots.value = [
-    //   {
-    //     name: 'Name 1',
-    //     subreddit: 'Sub 1',
-    //     fakeNews: true,
-    //     hateSpeech: true
-    //   },
-    //   {
-    //     name: 'Name 2',
-    //     subreddit: 'Sub 2',
-    //     fakeNews: false,
-    //     hateSpeech: true
-    //   },
-    //   {
-    //     name: 'Name 3',
-    //     subreddit: 'Sub 3',
-    //     fakeNews: false,
-    //     hateSpeech: false
-    //   }
-    // ];
-
     return {
       bots,
       fields,
