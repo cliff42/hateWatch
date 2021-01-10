@@ -5,7 +5,7 @@
       <b-button variant="outline-primary" @click="onRefresh">Refresh</b-button>
     </label>
     <label class="filter-hate">
-      <b-form-checkbox variant="outline-primary" @click="filterHate">Only Hate Speech Filter</b-form-checkbox>
+      <b-form-checkbox variant="outline-primary" @change="filterHate" aria-checked="false">Only Hate Speech Filter</b-form-checkbox>
     </label>
     <div class="table">
       <b-table striped hover bordered :items="comments" :fields="fields">
