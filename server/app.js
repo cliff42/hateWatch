@@ -82,10 +82,10 @@ app.get('/getAll', async (req, res) => {
 //
 app.post('/postBot', async (req, res) => {
     let bot = new Bot({
-        fakeNews: req.body.fakeNews,
-        hateSpeech: req.body.hateSpeech,
-        subreddit: req.body.subreddit,
-        name: req.body.name
+        fakeNews: req.optionNews,
+        hateSpeech: req.optionBody,
+        subreddit: req.subreddit,
+        name: req.name
     });
 
     try {
