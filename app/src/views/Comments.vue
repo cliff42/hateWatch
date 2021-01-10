@@ -4,6 +4,9 @@
     <label class="refresh">
       <b-button variant="outline-primary" @click="onRefresh">Refresh</b-button>
     </label>
+    <label class="filter-hate">
+      <b-button variant="outline-primary" @click="filterHate">Filter Hate Speech</b-button>
+    </label>
     <div class="table">
       <b-table striped hover bordered :items="comments" :fields="fields">
       </b-table>
@@ -20,6 +23,7 @@ export default {
   setup() {
     const comments = ref([]);
     const fields = ref([]);
+    const hateOnly = ref(false);
 
     fields.value = [
       {
@@ -32,18 +36,46 @@ export default {
         label: 'Comment',
         sortable: true
       },
+      {
+        key: 'certainty',
+        label: 'Confidence',
+        sortable: true
+      }
     ];
 
     async function onRefresh() {
 
-      const response = await axios.get('http://localhost:4000/getAllComments');
+      let response = [];
+      comments.value = [];
+
+      if (hateOnly.value) {
+        response = await axios.get('http://localhost:4000/getHateComments');
+      } else {
+        response = await axios.get('http://localhost:4000/getAllComments');
+      }
 
       response.data.forEach(comment => {
+        console.log(comment.certainty);
         comments.value.push({
           body: comment.body,
           author: comment.author,
+          certainty: String(comment.certainty * 100).substring(0, 6)
         });
       });
+
+      if (comments.value.length === 0) {
+        comments.value.push({
+          body: 'No comments',
+          author: 'No comments',
+          certainty: 'N/A'
+        })
+      }
+    }
+
+    function filterHate() {
+      hateOnly.value = !hateOnly.value;
+
+      onRefresh();
     }
 
     onRefresh();
@@ -51,14 +83,30 @@ export default {
     return {
       comments,
       fields,
+      hateOnly,
       onRefresh,
+      filterHate,
     };
   }
 }
 </script>
 
 <style scoped>
+  .menu {
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+    align-items: center;
+    justify-content: center;
+  }
+
   .refresh {
+    float: right;
+    margin: 10px;
+    margin-right: 20px;
+  }
+
+  .filter-hate {
     float: right;
     margin: 10px;
     margin-right: 20px;
