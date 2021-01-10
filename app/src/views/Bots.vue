@@ -1,6 +1,9 @@
 <template>
   <div class="bots">
     <h2>Bots</h2>
+     <label class="refresh">
+      <b-button variant="outline-primary" @click="getBots">Refresh</b-button>
+    </label>
     <div class="table">
       <b-table striped hover bordered :items="bots" :fields="fields">
         <template #cell(actions)="row">
@@ -39,7 +42,7 @@ import axios from 'axios';
 export default {
   name: 'Bots',
   setup() {
-    const bots = ref([{name:"bot1", subreddit:"sub1", hateSpeech:"true"}]);
+    const bots = ref([]);
     const modalInfo= ref([]);
     const modalSub = ref('');
     const modalName = ref('');
@@ -70,6 +73,7 @@ export default {
     async function getBots() {
       const response = await axios.get('http://localhost:4000/getAll');
 
+      bots.value = [];
       response.data.forEach(bot => {
         bots.value.push({
           name: bot.name,
@@ -78,6 +82,17 @@ export default {
           hateSpeech: bot.hateSpeech
         });
       });
+
+      if (bots.value.length === 0) {
+        bots.value = [
+          {
+            name: 'No bots found',
+            subreddit: 'N/A',
+            fakeNews: true,
+            hateSpeech: false
+          }
+        ];
+      }
     }
 
     function deleteBot(botName) {
@@ -124,6 +139,7 @@ export default {
       fields,
       newFields,
       handleModal,
+      getBots,
       deleteBot,
       editBot,
     };
@@ -146,7 +162,7 @@ export default {
 
 .table {
   width: 1000px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .actions-col {
@@ -155,6 +171,13 @@ export default {
 
 .actionButton {
   margin: 4px;
+}
+
+.refresh {
+  float: right;
+  margin-right: 8px;
+  margin-left: 1220px;
+  margin-bottom: 0px;
 }
 
 .input {

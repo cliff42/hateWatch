@@ -3,7 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const snoowrap = require('snoowrap');
-const language = require('@google-cloud/language');
 const testURI = process.env.MONGOURI;
 const Bot = require('./models/Bot');
 const Comment = require('./models/Comment');
@@ -116,7 +115,7 @@ new Comment({
 
 */
 
-// TODO: this is probably wrong so you may want to fix it
+
     let isHateSpeech = false;
     let certainty = 0;
 
@@ -125,7 +124,7 @@ new Comment({
             name: modelFullId,
             payload: {
                 textSnippet: {
-                    content: comment.body, // TODO: assuming body is the comment/ string want to analyize
+                    content: comment.body, 
                     mimeType: 'text/plain', // Types: 'test/plain', 'text/html'
                 },
             },
@@ -136,8 +135,6 @@ new Comment({
         console.log(err)
     }
 
-    // only saves if the comment is hatespeech
-    //TODO: not sure how to fill in the other data sections here so i just put '' for now
     if(certainty >= 0.5) {
         isHateSpeech = true;
     }
@@ -148,13 +145,14 @@ new Comment({
         isHateSpeech: isHateSpeech,
         certainty: certainty,
         subreddit: comment.subreddit.display_name,
+        datePosted: new Date(comment.created_utc * 1000),
     }).save().catch(err => {
         console.error(err);
     });
 }
 
 
-const client = new language.LanguageServiceClient();
+
 
 
 
@@ -167,7 +165,7 @@ for (let bot of bots) {
 */
 
 // main
-
+// heterogeneous values of obj properties is hopefully ok (mongoose documents and snoowrap comments)
 commentsSeen = {};
 
 async function runBots() {
@@ -179,6 +177,7 @@ async function runBots() {
             let comments = await reddit.getSubreddit(bot.subreddit).getNewComments({limit: 100});
             for (let comment of comments) {
                 if (commentsSeen[comment.id] === undefined) {
+                    commentsSeen[comment.id] = comment;
                     // put logic in here to prevent redundant computations
                     analyzeContents(comment, bot);                    
                 }
@@ -295,6 +294,40 @@ app.get('/getAllComments', async (req, res) => {
     try {
         let comments = await Comment.find();
         res.status(200).send(comments);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
+
+app.get('/timeSeries', async (req, res) => {
+    const PERIOD = 30;
+    const actualDate = new Date();
+    const endOfToday = new Date(actualDate.getFullYear(),
+    actualDate.getMonth(),
+    actualDate.getDate(),
+    23, 59, 59);
+    try {
+        let bots = await Bot.find();
+        let result = {};
+        for (let bot of bots) {
+            result[bot.subreddit] = [];
+            for (i = 0; i < PERIOD; i++) {
+                let earliest = actualDate.setDate(endOfToday.getDate() - PERIOD + i);
+                let lastest = actualDate.setDate(endOfToday.getDate() - PERIOD + i + 1);
+                let num = await Comment.find({
+                    datePosted: {
+                    //$gte: new Date(actualDate.getFullYear(),
+                    //actualDate.getMonth(),
+                    //actualDate.getDate(),
+                    //23, 59, 59),
+                    $gte: earliest,
+                    $lte: latest
+                }}).length;
+                result[bot.subreddit].push(num);
+            }
+        }
+        res.status(200).send(result);
     } catch (err) {
         console.error(err);
         res.status(500).send(err);

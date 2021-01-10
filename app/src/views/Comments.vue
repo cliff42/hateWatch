@@ -5,7 +5,7 @@
       <b-button variant="outline-primary" @click="onRefresh">Refresh</b-button>
     </label>
     <label class="filter-hate">
-      <b-button variant="outline-primary" @click="filterHate">Filter Hate Speech</b-button>
+      <b-form-checkbox variant="outline-primary" @change="filterHate" aria-checked="false">Only Hate Speech Filter</b-form-checkbox>
     </label>
     <div class="table">
       <b-table striped hover bordered :items="comments" :fields="fields">
@@ -29,6 +29,11 @@ export default {
       {
         key: 'author',
         label: 'Author',
+        sortable: true
+      },
+      {
+        key: 'subreddit',
+        label: 'Subreddit',
         sortable: true
       },
       {
@@ -59,14 +64,16 @@ export default {
         comments.value.push({
           body: comment.body,
           author: comment.author,
-          certainty: String(comment.certainty * 100).substring(0, 6)
+          subreddit: comment.subreddit,
+          certainty: String(comment.certainty * 100).substring(0, 6) + " %"
         });
       });
 
       if (comments.value.length === 0) {
         comments.value.push({
-          body: 'No comments',
-          author: 'No comments',
+          body: 'No comments found',
+          author: 'No comments found',
+          subreddit: 'N/A',
           certainty: 'N/A'
         })
       }
@@ -104,15 +111,22 @@ h2 {
   justify-content: center;
 }
 
+.table {
+  margin-top:0px;
+}
+
 .refresh {
   float: right;
   margin: 10px;
-  margin-right: 20px;
+  margin-right: 8px;
+  margin-left: 1220px;
 }
 
 .filter-hate {
   float: right;
   margin: 10px;
+  margin-top:0px;
   margin-right: 20px;
+  margin-left: 1110px;
 }
 </style>
