@@ -33,7 +33,7 @@ export default {
     async function onRefresh() {
 
       try {
-        comments = await axios.get('http://localhost:4000/getCommentData');
+        comments.value = await axios.get('http://localhost:4000/getCommentData');
       } catch (err) {
         console.log(err);
       }
@@ -41,6 +41,7 @@ export default {
 
     return {
       comments,
+      onRefresh,
     };
   }
 }
