@@ -102,8 +102,12 @@ async function runBots() {
         try {
             let comments = await reddit.getSubreddit(bot.subreddit).getNewComments({limit: 100});
             for (let comment of comments) {
-                //analyzeContents(comment.body, bot);
-                console.log(comment);
+                if (commentsSeen[comment.id] === undefined) {
+                    // put logic in here to prevent redundant computations
+                    //analyzeContents(comment.body, bot);
+                    console.log(comment);
+                    
+                }
             };
         } catch (err) {
             console.error(err);
