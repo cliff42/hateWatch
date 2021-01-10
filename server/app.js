@@ -222,7 +222,6 @@ app.get('/getAll', async (req, res) => {
     "subreddit": "test"}
 */
 app.post('/postBot', async (req, res) => {
-    console.log('REQ HERERERERERERE:' + req);
     let bot = new Bot({
         fakeNews: req.body.fakeNews,
         hateSpeech: req.body.hateSpeech,
