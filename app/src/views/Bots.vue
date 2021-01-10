@@ -143,8 +143,4 @@ export default {
   justify-content: center;
   flex-direction: row;
 }
-
-.modal-text {
-
-}
 </style>

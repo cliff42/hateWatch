@@ -50,10 +50,6 @@ const automl_client = new automl.PredictionServiceClient();
 
 const modelFullId = automl_client.modelPath('893071275610', 'us-central1', 'TCN5883893539531653120');
 
-console.log(modelFullId);
-
-
-
 const testAutoML = async () => {
     const test_string = 'is this hate text????'
 
@@ -105,7 +101,7 @@ const connectDB = async () => {
 
 connectDB();
 
-function analyzeContents(body, bot) {
+async function analyzeContents(body, bot) {
 // names of comment object properties obtained by logging comment objects from snoowrap requets
 // example of how you would save a comment to db
 /*
@@ -119,6 +115,42 @@ new Comment({
 
 
 */
+
+// TODO: this is probably wrong so you may want to fix it
+    const isHateSpeech = '';
+    const accuracy = '';
+
+    try {
+        const [automl_response] = await automl_client.predict({
+            name: modelFullId,
+            payload: {
+                textSnippet: {
+                    content: body, // TODO: assuming body is the comment/ string want to analyize
+                    mimeType: 'text/plain', // Types: 'test/plain', 'text/html'
+                },
+            },
+        });
+        
+        //TODO: there should only be one of these - needs testing though 
+        for (const annotationPayload of automl_response.payload) {
+            isHateSpeech = annotationPayload.displayName;
+            accuracy = classification.score;
+        }
+    } catch (err) {
+        console.log(err)
+    }
+
+    // only saves if the comment is hatespeech
+    //TODO: not sure how to fill in the other data sections here so i just put '' for now
+    if(isHateSpeech === '1') {
+        new Comment({
+            body: body,
+            author: '',
+            redditID: '',
+            isHateSpeech: true,
+            subreddit: '',
+        }).save();
+    }
 
 }
 
