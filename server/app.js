@@ -195,7 +195,7 @@ async function main() {
     setInterval(runBots, 5000);
 };
 
-// main();
+main();
 
 
 
